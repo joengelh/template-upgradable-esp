@@ -13,9 +13,8 @@ const char *ssid = "r3d3";
 const char *password = "12345678";
 
 // Rudder motor control pins
-const int motorPin1 = 25;       // Input pin 25 for motor channel A
-const int motorPin2 = 26;       // Input pin 26 for motor channel A
-const int maxRudderTime = 9000; // Milliseconds it takes the rudder to travel the entire way
+const int motorPin1 = 25; // Input pin 25 for motor channel A
+const int motorPin2 = 26; // Input pin 26 for motor channel B
 
 const byte DNS_PORT = 53;
 IPAddress apIP(192, 168, 0, 1);
@@ -129,7 +128,7 @@ void setup(void)
 
   webServer.on("/manualControl", HTTP_POST, []()
                {
-    if (webServer.hasArg("direction"))
+    if (webServer.hasArg("motor"))
     {
       String direction = webServer.arg("motor");
       if (direction == "forwards")

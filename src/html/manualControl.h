@@ -154,7 +154,7 @@ R"(
                 <button id="port" type="button" class="btn btn-default" style="height: 25%; width: 75%" onclick='makePost("manualControl", {"motor": "forwards"})'>Forwards</button>
             </div>
             <div class="col-xs-4" style="height: 100%; text-align: center">
-                <button id="starboard" type="button" class="btn btn-default" style="height: 25%; width: 75%" onclick='makePost("manualControl", {"motor": "stop"})'>Reverse</button>
+                <button id="starboard" type="button" class="btn btn-default" style="height: 25%; width: 75%" onclick='makePost("manualControl", {"motor": "stop"})'>Stop</button>
             </div>
           </div>
         </div>
