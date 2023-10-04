@@ -133,6 +133,10 @@ void setup(void)
       String direction = webServer.arg("motor");
       if (direction == "forwards")
       {
+        setMotorDirection(true);
+      }
+      if (direction == "reverse")
+      {
         setMotorDirection(false);
       }
       else if (direction == "stop")

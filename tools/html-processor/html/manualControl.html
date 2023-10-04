@@ -6,7 +6,7 @@
         color: white;
         background-color: #303030;
       }
-      h1, h2 {
+      h1, h2, h3 {
         color: white;
         text-align: center;
       }
@@ -25,12 +25,16 @@
       button {
         border-radius: 10px;
       }
-      #port {
-        background-color: red;
+      #forwards {
+        background-color: green;
         color: white;
       }
-      #starboard {
+      #reverse {
         background-color: green;
+        color: white;
+      }
+      #stop {
+        background-color: red;
         color: white;
       }
     </style>
@@ -56,26 +60,45 @@
     }
     </script>
     <script>
-    document.addEventListener("keydown", function(event) {
-      var key = event.key.toLowerCase(); // Convert the key to lowercase
-      if (key === "w") {
-        makePost("manualControl", {"motor": "forwards"});
-      } else if (key === "s") {
-        makePost("manualControl", {"motor": "stop"});
+      var motorState = "stop"; // Variable to track motor state
+
+      function updateMotorState(newState) {
+        if (newState !== motorState) {
+          motorState = newState;
+          makePost("manualControl", {"motor": motorState});
+        }
       }
-    });
+
+      document.addEventListener("keydown", function(event) {
+        var key = event.key.toLowerCase();
+        if (key === "w") {
+          updateMotorState("forwards");
+        } else if (key === "s") {
+          updateMotorState("reverse");
+        }
+      });
+
+      document.addEventListener("keyup", function(event) {
+        var key = event.key.toLowerCase();
+        if (key === "w" || key === "s") {
+          updateMotorState("stop");
+        }
+      });
     </script>
-    </head>
   <body>
     <h1>Manual Control</h1>
+    <h3>Use the "W" & "A" keys or buttons below</h3>
     <div class="container-fluid">
     <div class="col-xs-12" style="height: 25vh">
-        <div class="row" style="height: 25%; padding-top: 1em; padding-bottom: 1em">
-            <div class="col-xs-4" style="height: 100%; text-align: center">
-                <button id="port" type="button" class="btn btn-default" style="height: 25%; width: 75%" onclick='makePost("manualControl", {"motor": "forwards"})'>Forwards</button>
+        <div class="row" style="height: 33%; padding-top: 1em; padding-bottom: 1em">
+            <div class="col-xs-4" style="height: 300%; text-align: center">
+                <button id="forwards" type="button" class="btn btn-default" style="height: 100%; width: 75%" onclick='makePost("manualControl", {"motor": "forwards"})'>Forwards</button>
             </div>
-            <div class="col-xs-4" style="height: 100%; text-align: center">
-                <button id="starboard" type="button" class="btn btn-default" style="height: 25%; width: 75%" onclick='makePost("manualControl", {"motor": "stop"})'>Stop</button>
+            <div class="col-xs-4" style="height: 300%; text-align: center">
+                <button id="reverse" type="button" class="btn btn-default" style="height: 100%; width: 75%" onclick='makePost("manualControl", {"motor": "reverse"})'>Reverse</button>
+            </div>
+            <div class="col-xs-4" style="height: 300%; text-align: center">
+              <button id="stop" type="button" class="btn btn-default" style="height: 100%; width: 75%" onclick='makePost("manualControl", {"motor": "stop"})'>Stop</button>
             </div>
           </div>
         </div>
