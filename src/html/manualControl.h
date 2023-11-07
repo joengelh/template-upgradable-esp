@@ -164,7 +164,7 @@ R"(
     </script>
   <body>
     <h1>Manual Control</h1>
-    <h3>Use the "W" & "A" keys or buttons below</h3>
+    <h3>Use the "WASD" keys or buttons below</h3>
     <div class="container-fluid">
     <div class="col-xs-12" style="height: 25vh">
         <div class="row" style="height: 33%; padding-top: 1em; padding-bottom: 1em">
