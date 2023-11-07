@@ -5,6 +5,7 @@
 #include <WebServer.h>
 #include <DNSServer.h>
 #include <Update.h>
+#include <Servo.h>
 
 // ----------------
 // Set your WiFi SSID and Password here
@@ -12,9 +13,16 @@
 const char *ssid = "r3d3";
 const char *password = "12345678";
 
-// Rudder motor control pins
-const int motorPin1 = 25; // Input pin 25 for motor channel A
-const int motorPin2 = 26; // Input pin 26 for motor channel B
+const int enablePin = 4;
+const int motorPin1 = 16; // Input pin 25 for motor channel A
+const int motorPin2 = 17; // Input pin 26 for motor channel B
+
+const int servoPin = 5;
+Servo servo;
+
+// Current motor speed stored
+bool spinUp = true;
+int currentSpeed = 0;
 
 const byte DNS_PORT = 53;
 IPAddress apIP(192, 168, 0, 1);
@@ -49,24 +57,36 @@ void handleNotFound()
   }
   webServer.send(404, "text/plain", message);
 }
+
 void setMotorDirection(bool rudderDirection)
 {
   digitalWrite(motorPin1, rudderDirection ? HIGH : LOW);
   digitalWrite(motorPin2, rudderDirection ? LOW : HIGH);
+  spinUp = true;
+  currentSpeed = 0;
 }
 
 void stopMotor()
 {
   digitalWrite(motorPin1, LOW);
   digitalWrite(motorPin2, LOW);
+  analogWrite(enablePin, 0);
+  spinUp = false;
+  currentSpeed = 0;
 }
 
 void setup(void)
 {
   Serial.begin(115200);
 
+  pinMode(enablePin, OUTPUT);
   pinMode(motorPin1, OUTPUT);
   pinMode(motorPin2, OUTPUT);
+
+  servo.attach(servoPin);
+  servo.write(90);
+
+  analogWrite(enablePin, 0); // Initialize motor speed to 0
 
   // Initialize Wifi Ad-Hoc Network
   WiFi.mode(WIFI_AP);
@@ -126,7 +146,7 @@ void setup(void)
         }
       });
 
-  webServer.on("/manualControl", HTTP_POST, []()
+  webServer.on("/motor", HTTP_POST, []()
                {
     if (webServer.hasArg("motor"))
     {
@@ -150,6 +170,30 @@ void setup(void)
       webServer.send(400, "text/plain", "Bad Request");
     } });
 
+  webServer.on("/servo", HTTP_POST, []()
+               {
+    if (webServer.hasArg("direction"))
+    {
+      String direction = webServer.arg("direction");
+      if (direction == "right")
+      {
+        servo.write(0);
+      }
+      else if (direction == "left")
+      {
+        servo.write(180);
+      }
+      else if (direction == "center")
+      {
+        servo.write(90);
+      }
+      webServer.send(200, "text/plain", "set");
+    }
+    else
+    {
+      webServer.send(400, "text/plain", "Bad Request");
+    } });
+
   webServer.onNotFound(handleNotFound);
   webServer.begin();
   Serial.println("HTTP Server Started");
@@ -159,4 +203,8 @@ void loop(void)
 {
   dnsServer.processNextRequest();
   webServer.handleClient();
+  if (spinUp == true)
+  {
+    analogWrite(enablePin, constrain(currentSpeed += 1, 0, 255));
+  }
 }

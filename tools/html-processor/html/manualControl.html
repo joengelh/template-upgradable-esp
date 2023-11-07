@@ -60,28 +60,26 @@
     }
     </script>
     <script>
-      var motorState = "stop"; // Variable to track motor state
-
-      function updateMotorState(newState) {
-        if (newState !== motorState) {
-          motorState = newState;
-          makePost("manualControl", {"motor": motorState});
-        }
-      }
-
       document.addEventListener("keydown", function(event) {
         var key = event.key.toLowerCase();
         if (key === "w") {
-          updateMotorState("forwards");
+          makePost("motor", {"motor": "forwards"});
         } else if (key === "s") {
-          updateMotorState("reverse");
+          makePost("motor", {"motor": "reverse"});
+        } else if (key === "a") {
+          makePost("servo", {"direction": "left"});
+        } else if (key === "d") {
+          makePost("servo", {"direction": "right"});
         }
       });
 
       document.addEventListener("keyup", function(event) {
         var key = event.key.toLowerCase();
         if (key === "w" || key === "s") {
-          updateMotorState("stop");
+          makePost("motor", {"motor": "stop"});
+        }
+        else if (key === "a" || key === "d") {
+          makePost("servo", {"direction": "center"});
         }
       });
     </script>
@@ -92,13 +90,13 @@
     <div class="col-xs-12" style="height: 25vh">
         <div class="row" style="height: 33%; padding-top: 1em; padding-bottom: 1em">
             <div class="col-xs-4" style="height: 300%; text-align: center">
-                <button id="forwards" type="button" class="btn btn-default" style="height: 100%; width: 75%" onclick='makePost("manualControl", {"motor": "forwards"})'>Forwards</button>
+                <button id="forwards" type="button" class="btn btn-default" style="height: 100%; width: 75%" onclick='makePost("motor", {"motor": "forwards"})'>Forwards</button>
             </div>
             <div class="col-xs-4" style="height: 300%; text-align: center">
-                <button id="reverse" type="button" class="btn btn-default" style="height: 100%; width: 75%" onclick='makePost("manualControl", {"motor": "reverse"})'>Reverse</button>
+                <button id="reverse" type="button" class="btn btn-default" style="height: 100%; width: 75%" onclick='makePost("motor", {"motor": "reverse"})'>Reverse</button>
             </div>
             <div class="col-xs-4" style="height: 300%; text-align: center">
-              <button id="stop" type="button" class="btn btn-default" style="height: 100%; width: 75%" onclick='makePost("manualControl", {"motor": "stop"})'>Stop</button>
+              <button id="stop" type="button" class="btn btn-default" style="height: 100%; width: 75%" onclick='makePost("motor", {"motor": "stop"})'>Stop</button>
             </div>
           </div>
         </div>

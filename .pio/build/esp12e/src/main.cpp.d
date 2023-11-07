@@ -199,4 +199,5 @@
  /Users/joengelh/.platformio/packages/framework-arduinoespressif32/libraries/Update/src/Update.h \
  /Users/joengelh/.platformio/packages/framework-arduinoespressif32/cores/esp32/MD5Builder.h \
  /Users/joengelh/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_rom/include/esp_rom_md5.h \
- src/html/root.h src/html/manualControl.h src/html/settings.h
+ .pio/libdeps/esp12e/ServoESP32/src/Servo.h src/html/root.h \
+ src/html/manualControl.h src/html/settings.h
